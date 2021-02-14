@@ -10,11 +10,10 @@ class Canvas {
     private val width = 800;
     private val height = 600;
 
-    private data class Colour(val red: Uint8, val green: Uint8, val blue: Uint8, val alpha: Uint8)
 
     private inline fun<reified T> Pair<Int,Int>.createArray(initialValue: T) = Array(this.first) { Array(this.second) { initialValue } }
 
-    private val canvas = Pair(height, width).createArray(Colour(0u, 0u, 0u, 0u))
+    private val canvas = Pair(height, width).createArray(Color(0u, 0u, 0u, 0u))
 
     private val window: CPointer<SDL_Window>
     private val renderer: CPointer<SDL_Renderer>
@@ -54,12 +53,10 @@ class Canvas {
         SDL_Quit()
     }
 
-    fun putPixel(x: Int, y: Int, r: Uint8, g: Uint8, b: Uint8, a: Uint8) {
-        val midX: Int = width / 2
-        val midY: Int = height / 2
-        val transformX = x + midX
-        val transformY = -y + midY
-        canvas[transformY][transformX] = Colour(r, g, b, a)
+    fun putPixel(x: Int, y: Int, color: Color) {
+        val transformX = width / 2 + x
+        val transformY = height / 2 - y
+        canvas[transformY][transformX] = color
     }
 
     init {

@@ -16,7 +16,6 @@ val kotlinNativeDataPath = System.getenv("KONAN_DATA_DIR")?.let { File(it) }
 val mingw64Path = File(System.getenv("MINGW64_DIR") ?: "C:/msys64/mingw64")
 val mingw32Path = File(System.getenv("MINGW32_DIR") ?: "C:/msys64/mingw32")
 
-
 kotlin {
     val hostOs = System.getProperty("os.name")
     val isMingwX64 = hostOs.startsWith("Windows")
@@ -26,6 +25,15 @@ kotlin {
         isMingwX64 -> mingwX64("native")
         else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
     }
+    sourceSets {
+        val nativeMain by getting
+        val nativeTest by getting
+        nativeMain.apply {
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
+            }
+        }
+    }
 
     targets.withType<KotlinNativeTarget> {
         sourceSets["nativeMain"].apply {
@@ -34,7 +42,7 @@ kotlin {
 
         binaries {
             executable {
-                entryPoint = "renderer.main"
+                entryPoint = "main"
 
                 // Compile Windows Resources
 //                if (preset == presets["mingwX64"] || preset == presets["mingwX86"]) {
