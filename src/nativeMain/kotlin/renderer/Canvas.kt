@@ -2,6 +2,7 @@ package renderer
 
 import cnames.structs.SDL_Renderer
 import cnames.structs.SDL_Window
+import createArray
 import kotlinx.cinterop.*
 import sdl.*
 
@@ -9,9 +10,6 @@ import sdl.*
 class Canvas {
     private val width = 800;
     private val height = 600;
-
-
-    private inline fun<reified T> Pair<Int,Int>.createArray(initialValue: T) = Array(this.first) { Array(this.second) { initialValue } }
 
     private val canvas = Pair(height, width).createArray(Color(0u, 0u, 0u, 0u))
 

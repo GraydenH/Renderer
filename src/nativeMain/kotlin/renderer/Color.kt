@@ -1,10 +1,8 @@
 package renderer
 
+import clamp
+
 data class Color @ExperimentalUnsignedTypes constructor(val red: UByte, val green: UByte, val blue: UByte, val alpha: UByte) {
-    @ExperimentalUnsignedTypes
-    private fun clamp(value: UInt, limit: UByte): UByte {
-        return if (value > limit) limit else value.toUByte()
-    }
 
     @ExperimentalUnsignedTypes
     fun add(color: Color): Color {
