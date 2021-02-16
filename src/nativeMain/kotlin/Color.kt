@@ -1,7 +1,3 @@
-package renderer
-
-import clamp
-
 data class Color @ExperimentalUnsignedTypes constructor(val red: UByte, val green: UByte, val blue: UByte, val alpha: UByte) {
 
     @ExperimentalUnsignedTypes

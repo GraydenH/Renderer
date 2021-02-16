@@ -1,20 +1,29 @@
 package renderer
 
+import Color
 import cnames.structs.SDL_Renderer
 import cnames.structs.SDL_Window
 import createArray
 import kotlinx.cinterop.*
 import sdl.*
+import kotlinx.coroutines.*
 
 @ExperimentalUnsignedTypes
 class Canvas {
-    private val width = 800;
-    private val height = 600;
+    val width = 800;
+    val height = 600;
 
     private val canvas = Pair(height, width).createArray(Color(0u, 0u, 0u, 0u))
 
     private val window: CPointer<SDL_Window>
     private val renderer: CPointer<SDL_Renderer>
+
+    @ExperimentalUnsignedTypes
+    fun start() {
+        GlobalScope.async {
+            renderLoop()
+        }
+    }
 
     private fun pollEvents(): Boolean {
         memScoped {
@@ -31,10 +40,8 @@ class Canvas {
         return false
     }
 
-    fun renderLoop() {
-        var exit = false
-        while (!exit) {
-            exit = pollEvents()
+    private fun renderLoop() {
+        while (!pollEvents()) {
             for (i in 0 until height) {
                 val row = canvas[i]
                 for (j in 0 until width) {
