@@ -15,7 +15,7 @@ class Raytracer(private val scene: Scene) {
     private val viewportHeight = 600
     private val viewportWidth = 800
 
-    private val backgroundColor = Color(0u, 0u, 0u, 0u)
+    private val backgroundColor = Color(0u, 0u, 0u, 255u)
 
     //    CanvasToViewport(x, y) {
     //        return (x*Vw/Cw, y*Vh/Ch, d)
@@ -106,19 +106,20 @@ class Raytracer(private val scene: Scene) {
 //        }
 //    }
     fun start() {
-        canvas.start()
 
-        val origin = Vector(0.0, 0.0, 0.0)
-        val widthStart: Int = -canvas.width / 2
-        val widthEnd: Int = canvas.width / 2
-        val heightStart: Int = -canvas.height / 2
-        val heightEnd: Int = canvas.height / 2
-        for (x in widthStart..widthEnd) {
-            for (y in heightStart..heightEnd) {
-                val direction = canvasToViewport(x, y)
-                val color = traceRay(origin, direction, 1, Int.MAX_VALUE)
-                canvas.putPixel(x, y, color)
-            }
+            val origin = Vector(0.0, 0.0, 0.0)
+    val widthStart: Int = -canvas.width / 2
+    val widthEnd: Int = canvas.width / 2
+    val heightStart: Int = -canvas.height / 2
+    val heightEnd: Int = canvas.height / 2
+    for (x in widthStart until widthEnd) {
+        for (y in heightStart until heightEnd) {
+            val direction = canvasToViewport(x, y)
+            val color = traceRay(origin, direction, 1, Int.MAX_VALUE)
+            canvas.putPixel(x, y, color)
         }
     }
+    canvas.start()
+}
+
 }

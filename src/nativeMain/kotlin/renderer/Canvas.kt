@@ -60,7 +60,7 @@ class Canvas {
 
     fun putPixel(x: Int, y: Int, color: Color) {
         val transformX = width / 2 + x
-        val transformY = height / 2 - y
+        val transformY = height / 2 - y - 1
         canvas[transformY][transformX] = color
     }
 
