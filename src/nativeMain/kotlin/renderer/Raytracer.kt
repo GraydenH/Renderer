@@ -10,20 +10,19 @@ import kotlin.math.sqrt
 class Raytracer(private val scene: Scene) {
     private val canvas = Canvas()
 
-    private val d = 1.0
+    private val projectionPlaneZ = 1.0
 
-    private val viewportHeight = 600
-    private val viewportWidth = 800
+    private val viewportSize = 1.0
 
-    private val backgroundColor = Color(0u, 0u, 0u, 255u)
+    private val backgroundColor = Color(255u, 255u, 255u, 0u)
 
     //    CanvasToViewport(x, y) {
     //        return (x*Vw/Cw, y*Vh/Ch, d)
     //    }
     private fun canvasToViewport(x: Int, y: Int): Vector {
-        val widthFactor: Double = viewportWidth / canvas.width.toDouble()
-        val heightFactor: Double = viewportHeight / canvas.height.toDouble()
-        return Vector(x * widthFactor, y * heightFactor, d)
+        val widthFactor: Double = viewportSize / canvas.width.toDouble()
+        val heightFactor: Double = viewportSize / canvas.height.toDouble()
+        return Vector(x * widthFactor, y * heightFactor, projectionPlaneZ)
     }
 
     //    TraceRay(O, D, t_min, t_max) {
@@ -50,11 +49,11 @@ class Raytracer(private val scene: Scene) {
         var closestSphereColor: Color = backgroundColor
         for (sphere in scene.spheres) {
             val (t1, t2) = intersectSphere(origin, direction, sphere)
-            if (t1 >= minT && t1 <= maxT && t1 < closestT) {
+            if (t1 > minT && t1 < maxT && t1 < closestT) {
                 closestT = t1
                 closestSphereColor = sphere.color
             }
-            if (t2 >= minT && t2 <= maxT && t2 < closestT) {
+            if (t2 > minT && t2 < maxT && t2 < closestT) {
                 closestT = t2
                 closestSphereColor = sphere.color
             }
@@ -92,8 +91,8 @@ class Raytracer(private val scene: Scene) {
             return Pair(Double.MAX_VALUE, Double.MAX_VALUE)
         }
 
-        val t1 = (-b + sqrt(discriminant)) / 2 * a
-        val t2 = (-b - sqrt(discriminant)) / 2 * a
+        val t1 = (-b + sqrt(discriminant)) / (2 * a)
+        val t2 = (-b - sqrt(discriminant)) / (2 * a)
         return Pair(t1, t2)
     }
 
@@ -106,20 +105,19 @@ class Raytracer(private val scene: Scene) {
 //        }
 //    }
     fun start() {
-
-            val origin = Vector(0.0, 0.0, 0.0)
-    val widthStart: Int = -canvas.width / 2
-    val widthEnd: Int = canvas.width / 2
-    val heightStart: Int = -canvas.height / 2
-    val heightEnd: Int = canvas.height / 2
-    for (x in widthStart until widthEnd) {
-        for (y in heightStart until heightEnd) {
-            val direction = canvasToViewport(x, y)
-            val color = traceRay(origin, direction, 1, Int.MAX_VALUE)
-            canvas.putPixel(x, y, color)
+        val origin = Vector(0.0, 0.0, 0.0)
+        val widthStart: Int = -canvas.width / 2
+        val widthEnd: Int = canvas.width / 2
+        val heightStart: Int = -canvas.height / 2
+        val heightEnd: Int = canvas.height / 2
+        for (x in widthStart until widthEnd) {
+            for (y in heightStart until heightEnd) {
+                val direction = canvasToViewport(x, y)
+                val color = traceRay(origin, direction, 1, Int.MAX_VALUE)
+                canvas.putPixel(x, y, color)
+            }
         }
+        canvas.start()
     }
-    canvas.start()
-}
 
 }

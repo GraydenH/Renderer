@@ -10,7 +10,7 @@ import kotlinx.coroutines.*
 
 @ExperimentalUnsignedTypes
 class Canvas {
-    val width = 800;
+    val width = 600;
     val height = 600;
 
     private val canvas = Pair(height, width).createArray(Color(0u, 0u, 0u, 0u))
